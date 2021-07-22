@@ -16,7 +16,3 @@ subprojects {
         maven("https://mirrors.tencent.com/nexus/repository/maven-public/")
     }
 }
-
-tasks.register<Delete>("clean") {
-    delete(rootProject.buildDir)
-}

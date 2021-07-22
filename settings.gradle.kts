@@ -1,3 +1,3 @@
-rootProject.name = "Reinforcer"
+rootProject.name = "reinforcer"
 include(":plugin")
-project(":plugin").name = "reinforcer"
+project(":plugin").name = "reinforcer-plugin"
