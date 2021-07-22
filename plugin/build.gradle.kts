@@ -1,10 +1,10 @@
 plugins {
     `kotlin-dsl`
+    id("com.github.dcendents.android-maven")
 }
 
-repositories {
-    maven("https://mirrors.tencent.com/nexus/repository/maven-public/")
-}
+group = "com.github.xiazunyang"
+version = "1.0.0"
 
 dependencies {
     implementation(gradleApi())
