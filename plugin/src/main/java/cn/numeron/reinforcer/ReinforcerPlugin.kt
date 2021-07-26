@@ -29,15 +29,15 @@ class ReinforcerPlugin : Plugin<Project> {
         val reinforcer = project.extensions.getByType<Reinforcer>()
         val renameMap = reinforcer.renameMap
         val outputPath = outputPathForRuntime ?: reinforcer.outputPath
-                ?.takeIf {
-                    it.isNotEmpty()
-                }
+            ?.takeIf {
+                it.isNotEmpty()
+            }
         ?: throw NullPointerException("The output directory could not be found.")
 
         val installationPath = installationPathForRuntime ?: reinforcer.installationPath
-                ?.takeIf {
-                    it.isNotEmpty()
-                }
+            ?.takeIf {
+                it.isNotEmpty()
+            }
         ?: throw NullPointerException("The installation path of the reinforcement tool could not be found.")
 
         project.logger.quiet("outputPath = [$outputPath], installationPath = [$installationPath], renameMap = [$renameMap]")
@@ -53,30 +53,35 @@ class ReinforcerPlugin : Plugin<Project> {
 
         //获取输出目录下所有的发布版的apk文件
         File(project.buildDir, "outputs/apk")
-                .listFiles()
-                ?.mapNotNull {
-                    //从release文件夹下找到最后修改的apk文件
-                    File(it, "release")
-                            .takeIf(File::exists)
-                            ?.listFiles { _, name ->
-                                name.endsWith(".apk")
-                            }
-                            ?.maxBy(File::lastModified)
-                }?.let { apkFiles ->
-                    val countDownLatch = CountDownLatch(apkFiles.size)
-                    apkFiles.forEach { apkFile ->
-                        Thread {
-                            //加固
-                            val command = "java -jar $installationPath -jiagu $apkFile $outputDir -autosign -automulpkg"
-                            val process = runtime.exec(command)
-                            project.logger.quiet("$apkFile reinforcing...")
-                            process.waitFor()
-                            project.logger.quiet("$outputDir reinforced!")
-                            countDownLatch.countDown()
-                        }.start()
+            .listFiles()
+            ?.mapNotNull {
+                //从release文件夹下找到最后修改的apk文件
+                File(it, "release")
+                    .takeIf(File::exists)
+                    ?.listFiles { _, name ->
+                        name.endsWith(".apk")
                     }
-                    countDownLatch.await()
+                    ?.maxBy(File::lastModified)
+            }?.let { apkFiles ->
+                val countDownLatch = CountDownLatch(apkFiles.size)
+                apkFiles.forEach { apkFile ->
+                    Thread {
+                        //加固
+                        val command = "java -jar $installationPath -jiagu $apkFile $outputDir -autosign -automulpkg"
+                        val process = runtime.exec(command)
+                        process.inputStream.bufferedReader().lines().forEach {
+                            project.logger.quiet("reinforcing: $it")
+                            if (it.contains("error")) {
+                                project.logger.quiet("reinforcing: 加固失败，详情请查看相关日志。")
+                                process.destroy()
+                            }
+                        }
+                        process.waitFor()
+                        countDownLatch.countDown()
+                    }.start()
                 }
+                countDownLatch.await()
+            }
         //重命名加固后的文件
         outputDir.listFiles { _, name ->
             name.endsWith(".apk") && name !in existFiles
