@@ -5,7 +5,7 @@ buildscript {
     }
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.0")
-        classpath("com.github.dcendents:android-maven-gradle-plugin:2.1")
+        classpath("com.vanniktech:gradle-maven-publish-plugin:0.17.0")
     }
 }
 

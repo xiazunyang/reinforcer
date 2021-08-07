@@ -1,11 +1,17 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     `kotlin-dsl`
-    id("com.github.dcendents.android-maven")
+    id("com.vanniktech.maven.publish")
 }
 
-group = "com.github.xiazunyang"
-version = "1.0.0"
+group = "cn.numeron"
+version = "1.0.1"
 
 dependencies {
     implementation(gradleApi())
+}
+
+mavenPublish {
+    sonatypeHost = SonatypeHost.S01
 }
