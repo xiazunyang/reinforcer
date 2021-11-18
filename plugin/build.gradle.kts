@@ -8,4 +8,5 @@ version = "1.0.0"
 
 dependencies {
     implementation(gradleApi())
+    implementation("com.android.tools.build:gradle:4.2.2")
 }
