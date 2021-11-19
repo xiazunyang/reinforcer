@@ -24,13 +24,15 @@ class ReinforcerPlugin : Plugin<Project> {
 
     private fun reinforce(taskName: String, project: Project) {
         val reinforcer = project.extensions.getByType<Reinforcer>()
-        val renameMap = reinforcer.renameMap
-
+        if (!reinforcer.enabled) {
+            project.logger.quiet("reinforcer plugin is disabled.")
+            return
+        }
         val installationPath = reinforcer.installationPath
-            ?: throw NullPointerException("The installation path of the reinforcement tool could not be found.")
+                ?: throw NullPointerException("The installation path of the reinforcement tool could not be found.")
 
         val outputPath = reinforcer.outputDirectory
-            ?: throw NullPointerException("The output directory could not be found.")
+                ?: throw NullPointerException("The output directory could not be found.")
 
         val username = reinforcer.username
         val password = reinforcer.password
@@ -103,7 +105,7 @@ class ReinforcerPlugin : Plugin<Project> {
         if (reinforcedApkFile != null) {
             project.logger.quiet("target file: $reinforcedApkFile")
             val outputFileName = reinforcedApkFile.name.substringBefore('_').let {
-                renameMap[it] ?: it
+                reinforcer.renameMap[it] ?: it
             } + ".apk"
             val outputApkFile = File(outputDirectory, outputFileName)
             reinforcedApkFile.copyTo(outputApkFile, true)

@@ -1,4 +1,5 @@
 ### 360加固助手自动加固插件
+当前最新版本号：[![](https://jitpack.io/v/cn.numeron/reinforcer.svg)](https://jitpack.io/#cn.numeron/reinforcer)
 
 #### 介绍
 
@@ -16,7 +17,7 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'cn.numeron:reinforcer:1.0.0'
+        classpath 'cn.numeron:reinforcer:latest_version'
     }
 }
 ```
@@ -30,8 +31,17 @@ apply plugin: 'reinforcer-plugin'
 
 //此行代码添加到android节点以下
 reinforcer {
-    outputPath = TODO("apk文件输出目录")
-    installationPath = TODO("360加固助手的jiagu.jar包完整路径")
+    //是否启用reinforcer
+    enabled = true
+    //360加固助手的登录账号与密码
+    username = "账号"
+    password = "密码"
+    //如果android/buildTypes/release节点下已配置签名信息，则无需配置此参数
+    //配置参数为signingConfigs节点下其中之一的名称
+    signConfigName = "signing config name"
+    //以下两项为必填项，否则无法运行加固功能
+    outputDirection = "apk文件输出目录"
+    installationPath = "360加固助手的jiagu.jar包完整路径"
 }
 
 ```
@@ -40,4 +50,3 @@ reinforcer {
 
 * 执行打包任务即可，如：`gradlew app:assembleRelease`或`gradlew app:assembel[渠道名]Release`
 * 等待任务执行结束后，到输入apk输出目录获取加固后的文件。
-* 可选配置参数：`-PoutputPath=[apk文件输出目录]` `-PinstallationPath=[360加固助手的jiagu.jar包完整路径]`，方便在不同环境下指定输出目录及360加固助手的安装路径。

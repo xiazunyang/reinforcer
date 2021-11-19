@@ -2,6 +2,9 @@ package cn.numeron.reinforcer
 
 open class Reinforcer {
 
+    /** 是否启用Reinforcer */
+    var enabled = true
+
     /** 360加固保的账号 */
     var username: String? = null
 
