@@ -40,7 +40,7 @@ reinforcer {
     //配置参数为signingConfigs节点下其中之一的名称
     signConfigName = "signing config name"
     //以下两项为必填项，否则无法运行加固功能
-    outputDirection = "apk文件输出目录"
+    outputDirectory = "apk文件输出目录"
     installationPath = "360加固助手的jiagu.jar包完整路径"
 }
 
