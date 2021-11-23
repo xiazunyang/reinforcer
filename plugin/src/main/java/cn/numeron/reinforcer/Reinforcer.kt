@@ -21,11 +21,11 @@ open class Reinforcer {
     var installationPath: String? = null
 
     /** 加固后安装包的重命名映射 */
-    val renameMap = mutableMapOf<String, String>()
+    var rename = mutableMapOf<String, String>()
 
     fun rename(vararg entries: Pair<String, String>) {
         for (entry in entries) {
-            renameMap[entry.first] = entry.second
+            rename[entry.first] = entry.second
         }
     }
 
@@ -33,7 +33,7 @@ open class Reinforcer {
         keyOrValues.forEachIndexed { index, keyOrValue ->
             if (index % 2 == 0) {
                 if (index < keyOrValues.lastIndex) {
-                    renameMap[keyOrValue] = keyOrValues[index + 1]
+                    rename[keyOrValue] = keyOrValues[index + 1]
                 }
             }
         }

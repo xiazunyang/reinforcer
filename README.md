@@ -1,4 +1,5 @@
 ### 360加固助手自动加固插件
+
 当前最新版本号：[![](https://jitpack.io/v/cn.numeron/reinforcer.svg)](https://jitpack.io/#cn.numeron/reinforcer)
 
 #### 介绍
@@ -31,17 +32,20 @@ apply plugin: 'reinforcer-plugin'
 
 //此行代码添加到android节点以下
 reinforcer {
-    //是否启用reinforcer
+    //是否启用reinforcer，默认为启用
     enabled = true
-    //360加固助手的登录账号与密码
-    username = "账号"
-    password = "密码"
-    //如果android/buildTypes/release节点下已配置签名信息，则无需配置此参数
-    //配置参数为signingConfigs节点下其中之一的名称
-    signConfigName = "signing config name"
     //以下两项为必填项，否则无法运行加固功能
     outputDirectory = "apk文件输出目录"
     installationPath = "360加固助手的jiagu.jar包完整路径"
+    //360加固助手的登录账号与密码，没有设置时，每次打包不进行登录操作
+    username = "账号"
+    password = "密码"
+    //默认情况下会读取android/buildTypes/release闭包下已配置的签名信息
+    //配置参数为signingConfigs节点下其中之一的名称
+    signConfigName = "signing config name"
+    //默认情况下reinforcer加固后的文件名与项目中applicationVariants闭包下指定的文件名相同
+    //可通过以下方式添加映射关系，当文件名(不包含扩展名)与key值匹配时，输出的文件名会修改为value的值
+    rename += ["key1": "value1", "key2": "value2"]
 }
 
 ```
@@ -50,3 +54,38 @@ reinforcer {
 
 * 执行打包任务即可，如：`gradlew app:assembleRelease`或`gradlew app:assembel[渠道名]Release`
 * 等待任务执行结束后，到输入apk输出目录获取加固后的文件。
+
+#### 附录
+
+* 指定项目打包时apk文件名的方法：
+```groovy
+android {
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            outputFileName = "打包后的apk包名.apk"
+        }
+    }
+}
+```
+
+* 设置打包后自动签名的信息：
+```groovy
+android {
+    signingConfigs {
+        //release即此签名配置的名称
+        release {
+            keyAlias '...'
+            keyPassword '...'
+            storePassword '...'
+            storeFile file("...")
+        }
+    }
+    buildTypes {
+        release {
+            ...
+            //指定打包时使用signingConfigs闭包下release的签名配置
+            signingConfig signingConfigs.release
+        }
+    }
+}
+```

@@ -29,10 +29,10 @@ class ReinforcerPlugin : Plugin<Project> {
             return
         }
         val installationPath = reinforcer.installationPath
-                ?: throw NullPointerException("The installation path of the reinforcement tool could not be found.")
+            ?: throw NullPointerException("The installation path of the reinforcement tool could not be found.")
 
         val outputPath = reinforcer.outputDirectory
-                ?: throw NullPointerException("The output directory could not be found.")
+            ?: throw NullPointerException("The output directory could not be found.")
 
         val username = reinforcer.username
         val password = reinforcer.password
@@ -100,16 +100,15 @@ class ReinforcerPlugin : Plugin<Project> {
         val reinforcedApkFile = outputDirectory.listFiles { _, name ->
             name.endsWith(".apk") && name !in existFiles
         }?.firstOrNull()
+        project.logger.quiet("reinforced apk file: $reinforcedApkFile")
 
         //重命名加固后的文件
         if (reinforcedApkFile != null) {
-            project.logger.quiet("target file: $reinforcedApkFile")
-            val outputFileName = reinforcedApkFile.name.substringBefore('_').let {
-                reinforcer.renameMap[it] ?: it
-            } + ".apk"
-            val outputApkFile = File(outputDirectory, outputFileName)
+            val filename = outputFile.nameWithoutExtension
+            val outputFileName = reinforcer.rename[filename] ?: filename
+            val outputApkFile = File(outputDirectory, "$outputFileName.apk")
             reinforcedApkFile.copyTo(outputApkFile, true)
-            project.logger.quiet("renamed file: $outputApkFile")
+            project.logger.quiet("renamed apk file: $outputApkFile")
             reinforcedApkFile.delete()
         }
 
