@@ -37,7 +37,7 @@ reinforcer {
     //以下两项为必填项，否则无法运行加固功能
     outputDirectory = "apk文件输出目录"
     installationPath = "360加固助手的jiagu.jar包完整路径"
-    //360加固助手的登录账号与密码，没有设置时，每次打包不进行登录操作
+    //360加固助手的登录账号与密码，没有设置时，每次打包不进行登录操作，但是可能会加固失败。
     username = "账号"
     password = "密码"
     //默认情况下会读取android/buildTypes/release闭包下已配置的签名信息
