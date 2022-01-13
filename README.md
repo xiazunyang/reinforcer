@@ -4,8 +4,8 @@
 
 #### 介绍
 
-* 基于360加固助手的自动化加固的Gradle插件，可以在AndroidStudio执行完assembleRelease相关的任务结束后自动使用360加固助手进行加固apk文件，并输出至指定的文件目录下。
-
+* 基于`360加固宝`的自动化加固的`Gradle插件`，可以在`AndroidStudio`执行完`assembleRelease`相关的任务结束后自动使用`360加固宝`进行加固`apk`文件，并输出至指定的文件目录下。
+* 支持`Windows`、`Mac OS`以及`Linux`系统。
 * 支持多渠道打包。
 
 #### 安装方法
@@ -32,7 +32,7 @@ apply plugin: 'reinforcer-plugin'
 
 //此行代码添加到android节点以下
 reinforcer {
-    //是否启用reinforcer，默认为启用
+    //执行完打包任务后是否加固，默认为是
     enabled = true
     //以下两项为必填项，否则无法运行加固功能
     outputDirectory = "apk文件输出目录"
@@ -52,9 +52,19 @@ reinforcer {
 
 #### 使用方法
 
-* 执行打包任务即可，如：`gradlew app:assembleRelease`或`gradlew app:assembel[渠道名]Release`
+* 启用`reinforcer`后，执行打包任务即可，如：`gradlew app:assembleRelease`或`gradlew app:assembel[渠道名]Release`
 * 等待任务执行结束后，到输入apk输出目录获取加固后的文件。
-
+* 执行`reinforce`任务可以单独执行加固任务。
+  - 通过命令行执行任务时，需要添加`-PinputApi=[apk路径]`作为参数。
+   ![](reinforce_task_1.png)
+  - 通过`gradle`列表执行时，需要在`arguments`中填入`-PinputApi=[apk路径]`。
+   ![](reinforce_task_0.png)
+  - 或在`app`模块的`build.gradle`文件中添加以下代码指定要加固的`apk文件`后，直接运行`reinforce`任务即可。
+  ```groovy
+  tasks.getByName("reinforce") {
+    inputApk = "build/outputs/apk/develop/release/app.apk"
+  }
+  ```
 #### 附录
 
 * 指定项目打包时apk文件名的方法：
