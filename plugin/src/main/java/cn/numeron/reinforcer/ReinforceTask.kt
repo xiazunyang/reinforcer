@@ -34,6 +34,8 @@ open class ReinforceTask : DefaultTask() {
             return logger.quiet("reinforce task terminated, not found input apk.")
         }
 
+        val inputApk = project.file(inputApkPath)
+
         //取出加固的配置信息
         val reinforcer = project.extensions.getByType<Reinforcer>()
 
@@ -102,7 +104,7 @@ open class ReinforceTask : DefaultTask() {
         project.exec {
             setWorkingDir(installationPath)
             executable(javaPath)
-            args("-jar", jiaguPath, "-jiagu", inputApkPath, outputDirectory, "-autosign", "-automulpkg")
+            args("-jar", jiaguPath, "-jiagu", inputApk, outputDirectory, "-autosign", "-automulpkg")
         }.rethrowFailure().assertNormalExitValue()
 
         //获取新加固的文件
@@ -113,7 +115,7 @@ open class ReinforceTask : DefaultTask() {
 
         //重命名加固后的文件
         if (reinforcedApkFile != null) {
-            val filename = inputApkPath.substringBeforeLast('.').substringAfterLast(File.separatorChar)
+            val filename = inputApk.nameWithoutExtension
             val outputFileName = reinforcer.rename[filename] ?: filename
             val outputApkFile = File(outputDirectory, "$outputFileName.apk")
             reinforcedApkFile.copyTo(outputApkFile, true)

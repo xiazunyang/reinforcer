@@ -54,17 +54,17 @@ reinforcer {
 
 * 启用`reinforcer`后，执行打包任务即可，如：`gradlew app:assembleRelease`或`gradlew app:assembel[渠道名]Release`
 * 等待任务执行结束后，到输入apk输出目录获取加固后的文件。
-* 执行`reinforce`任务可以单独执行加固任务。
-  - 通过命令行执行任务时，需要添加`-PinputApi=[apk路径]`作为参数。
-   ![](reinforce_task_1.png)
-  - 通过`gradle`列表执行时，需要在`arguments`中填入`-PinputApi=[apk路径]`。
-   ![](reinforce_task_0.png)
-  - 或在`app`模块的`build.gradle`文件中添加以下代码指定要加固的`apk文件`后，直接运行`reinforce`任务即可。
-  ```groovy
-  tasks.getByName("reinforce") {
-    inputApk = "build/outputs/apk/develop/release/app.apk"
-  }
-  ```
+* 执行`reinforce`任务可以单独执行加固任务，需要指定`inputApk`作为参数，参考以下3种方式：
+   - 通过命令行执行任务时，需要添加`-PinputApi=[apk路径]`作为参数。
+    ![](reinforce_task_0.png)
+   - 通过`gradle`列表执行时，需要在`arguments`中填入`-PinputApi=[apk路径]`。
+    ![](reinforce_task_1.png)
+   - 或在`app`模块的`build.gradle`文件中添加以下代码指定要加固的`apk文件`后，直接运行`reinforce`任务即可。
+     ```groovy
+     tasks.getByName("reinforce") {
+         inputApk = "build/outputs/apk/release/application.apk"
+     }
+     ```
 #### 附录
 
 * 指定项目打包时apk文件名的方法：
