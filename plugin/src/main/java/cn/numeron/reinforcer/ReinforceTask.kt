@@ -113,7 +113,7 @@ open class ReinforceTask : DefaultTask() {
 
         //重命名加固后的文件
         if (reinforcedApkFile != null) {
-            val filename = inputApkPath.substringBeforeLast('.').substringBeforeLast(File.separatorChar)
+            val filename = inputApkPath.substringBeforeLast('.').substringAfterLast(File.separatorChar)
             val outputFileName = reinforcer.rename[filename] ?: filename
             val outputApkFile = File(outputDirectory, "$outputFileName.apk")
             reinforcedApkFile.copyTo(outputApkFile, true)
